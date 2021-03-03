@@ -2,7 +2,7 @@ version: '3.4'
 services:
   mariadb_node01:
     hostname: mariadb_node01
-    image: garutilorenzo/mariadb-galera:10.5
+    image: garutilorenzo/mariadb-galera:10.4
     volumes:
       - type: volume
         source: mariadb_node01
@@ -23,7 +23,7 @@ services:
 
   mariadb_node02:
     hostname: mariadb_node02
-    image: garutilorenzo/mariadb-galera:10.5
+    image: garutilorenzo/mariadb-galera:10.4
     restart: always
     volumes:
       - type: volume
@@ -43,7 +43,7 @@ services:
 
   mariadb_node03:
     hostname: mariadb_node03
-    image: garutilorenzo/mariadb-galera:10.5
+    image: garutilorenzo/mariadb-galera:10.4
     restart: always
     volumes:
       - type: volume

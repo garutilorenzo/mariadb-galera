@@ -71,8 +71,8 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.5
-ENV MARIADB_VERSION 1:10.5.9+maria~focal
+ENV MARIADB_MAJOR 10.4
+ENV MARIADB_VERSION 1:10.4.18+maria~focal
 # release-status:Stable
 # (https://downloads.mariadb.org/mariadb/+releases/)
 
@@ -118,6 +118,7 @@ RUN set -ex; \
 VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
+RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 RUN chown -R mysql:mysql /etc/mysql
