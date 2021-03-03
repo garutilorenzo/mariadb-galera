@@ -71,8 +71,8 @@ RUN set -ex; \
 	apt-key list
 
 # bashbrew-architectures: amd64 arm64v8 ppc64le
-ENV MARIADB_MAJOR 10.5
-ENV MARIADB_VERSION 1:10.5.9+maria~focal
+ENV MARIADB_MAJOR 10.3
+ENV MARIADB_VERSION 1:10.3.28+maria~focal
 # release-status:Stable
 # (https://downloads.mariadb.org/mariadb/+releases/)
 
@@ -98,7 +98,7 @@ RUN set -ex; \
 		"mariadb-server=$MARIADB_VERSION" \
 # mariadb-backup is installed at the same time so that `mysql-common` is only installed once from just mariadb repos
 		mariadb-backup \
-		galera-4 \
+		galera-3 \
 		socat \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
