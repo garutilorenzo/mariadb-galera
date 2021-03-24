@@ -1,0 +1,79 @@
+version: '3.4'
+services:
+  mariadb_node01:
+    hostname: mariadb_node01
+    image: mariadb-galera:10.5
+    build:
+     context: mariadb-galera/
+     args:
+      - http_proxy=$http_proxy
+      - https_proxy=$http_proxy
+    volumes:
+      - type: volume
+        source: mariadb_node01
+        target: /var/lib/mysql/
+        volume:
+          nocopy: true
+    networks:
+       cluster:
+          ipv4_address: 172.16.0.2
+    environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_USER: test
+       MYSQL_PASSWORD: P@ssw0rd
+       MYSQL_DATABASE: db_test
+       CLUSTER_MEMBERS: mariadb_node02,mariadb_node03
+       CLUSTER_NAME: mariadb-galera-cluster
+       BOOTSTRAP: 1
+
+  mariadb_node02:
+    hostname: mariadb_node02
+    image: mariadb-galera:10.5
+    restart: always
+    volumes:
+      - type: volume
+        source: mariadb_node02
+        target: /var/lib/mysql/
+        volume:
+          nocopy: true
+    networks:
+       cluster:
+          ipv4_address: 172.16.0.3
+    environment:
+       MYSQL_ROOT_PASSWORD: root
+       CLUSTER_MEMBERS: mariadb_node01,mariadb_node03
+       CLUSTER_NAME: mariadb-galera-cluster
+    depends_on:
+      - "mariadb_node01"
+
+  mariadb_node03:
+    hostname: mariadb_node03
+    image: mariadb-galera:10.5
+    restart: always
+    volumes:
+      - type: volume
+        source: mariadb_node03
+        target: /var/lib/mysql/
+        volume:
+          nocopy: true
+    networks:
+       cluster:
+          ipv4_address: 172.16.0.4
+    environment:
+       MYSQL_ROOT_PASSWORD: root
+       CLUSTER_MEMBERS: mariadb_node01,mariadb_node02
+       CLUSTER_NAME: mariadb-galera-cluster
+    depends_on:
+      - "mariadb_node01"
+
+volumes:
+ mariadb_node01:
+ mariadb_node02:
+ mariadb_node03:
+
+networks:
+  cluster:
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.0.0/16
