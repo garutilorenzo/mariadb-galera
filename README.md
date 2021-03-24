@@ -54,3 +54,5 @@ Tear down and clean all:
 ```console
 docker-compose down -v
 ```
+
+[![MariaDB Galera Cluster CI](https://github.com/garutilorenzo/mariadb-galera/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/garutilorenzo/mariadb-galera/actions/workflows/ci.yml)
