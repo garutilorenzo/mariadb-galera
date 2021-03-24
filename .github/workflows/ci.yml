@@ -1,0 +1,32 @@
+name: MariaDB Galera Cluster CI
+
+on:
+  push:
+    branches:
+    - 10.3
+  pull_request:
+    branches:
+    - 10.3
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker images
+      run: docker-compose -f .docker-compose.yml-ci build --pull --no-cache
+    - name: Bringup the environment
+      run: docker-compose -f .docker-compose.yml-ci up -d
+    - name: Sleep for 60 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '60s'
+    - name: List all containers
+      run: docker ps -a
+    - name: Check cluster size
+      run: if [ $(docker-compose -f .docker-compose.yml-ci exec -T mariadb_node01 mysql -Aproot -N -e "SHOW GLOBAL STATUS LIKE 'wsrep_cluster_size';" | awk '{print $2}') -eq 3 ]; then echo "OK"; exit 0; else echo "KO"; exit 1; fi
+    - name: Get cluster uuid 
+      run: docker-compose -f .docker-compose.yml-ci exec -T mariadb_node01 mysql -Aproot -N -e "SHOW GLOBAL STATUS LIKE 'wsrep_cluster_state_uuid';" | awk '{print $2}' 
